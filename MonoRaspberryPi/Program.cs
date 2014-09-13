@@ -40,7 +40,7 @@ namespace MonoRaspberryPi
 
                     reader.Readed += ReadedHandler;
                     reader.Read();
-                    cardRead = false;
+                    //cardRead = false;
                 }
                 System.Threading.Thread.Sleep(1000);
                 Console.WriteLine("loop end.");
@@ -51,7 +51,7 @@ namespace MonoRaspberryPi
         {
             Console.WriteLine("Read!!");
             Console.WriteLine("\"" + e.ID + "\"");
-            cardRead = true;
+            //cardRead = true;
         }
     }
 
