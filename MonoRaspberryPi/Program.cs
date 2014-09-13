@@ -17,6 +17,11 @@ namespace MonoRaspberryPi
 
             nabager.Start();
 
+            for (; ; )
+            {
+                System.Threading.Thread.Sleep(1000);
+            }
+/*
             while (Console.ReadKey().KeyChar != 'q')
             {
                 if(cardRead)
@@ -30,6 +35,7 @@ namespace MonoRaspberryPi
                 }
                 continue;
             }
+*/
         }
 
         static void ReadedHandler(object sender, CardReadedEventArgs e)
