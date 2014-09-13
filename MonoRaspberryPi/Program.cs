@@ -17,34 +17,32 @@ namespace MonoRaspberryPi
 
             nabager.Start();
 
-            for (; ; )
-            {
-                System.Threading.Thread.Sleep(1000);
-            }
-/*
-            while (Console.ReadKey().KeyChar != 'q')
-            {
-                if(cardRead)
-                {
+            //while (Console.ReadKey().KeyChar != 'q')
+            //{
+            //    if(cardRead)
+            //    {
                     Console.WriteLine("card read start.");
                     FelicaReader reader = new FelicaReader();
 
                     reader.Readed += ReadedHandler;
                     reader.Read();
-                    cardRead = false;
-                }
-                continue;
+                    //cardRead = false;
+            //    }
+            //    continue;
+            //}
+
+            for (; ; )
+            {
+                System.Threading.Thread.Sleep(1000);
             }
-*/
         }
-        /*
+
         static void ReadedHandler(object sender, CardReadedEventArgs e)
         {
             Console.WriteLine("Read!!");
             Console.WriteLine("\"" + e.ID + "\"");
-            cardRead = true;
+            //cardRead = true;
         }
-        */
     }
 
     class GpioManager
