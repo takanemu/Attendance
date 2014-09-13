@@ -83,10 +83,13 @@ namespace MonoRaspberryPi
 
             if(sw != this.button)
             {
+                if (sw == 1)
+                {
+                    this.led++;
+                    this.led = this.led > 2 ? 0 : this.led;
+                    this.LedOn(this.led);
+                }
                 this.button = sw;
-                this.led++;
-                this.led = this.led > 2 ? 0 : this.led;
-                this.LedOn(this.led);
             }
         }
 
