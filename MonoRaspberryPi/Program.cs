@@ -43,6 +43,7 @@ namespace MonoRaspberryPi
                     cardRead = false;
                 }
                 System.Threading.Thread.Sleep(1000);
+                Console.WriteLine("loop end.");
             }
         }
 
