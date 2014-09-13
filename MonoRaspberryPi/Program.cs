@@ -77,7 +77,7 @@ namespace MonoRaspberryPi
             {
                 this.button = sw;
                 this.led++;
-                this.led = this.led >= 2 ? 0 : this.led;
+                this.led = this.led > 2 ? 0 : this.led;
                 this.LedOn(this.led);
             }
         }
