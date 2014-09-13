@@ -9,7 +9,7 @@ namespace MonoRaspberryPi
 {
     class Program
     {
-        static bool cardRead = true;
+        //static bool cardRead = true;
 
         static void Main(string[] args)
         {
@@ -37,13 +37,14 @@ namespace MonoRaspberryPi
             }
 */
         }
-
+        /*
         static void ReadedHandler(object sender, CardReadedEventArgs e)
         {
             Console.WriteLine("Read!!");
             Console.WriteLine("\"" + e.ID + "\"");
             cardRead = true;
         }
+        */
     }
 
     class GpioManager
@@ -58,7 +59,7 @@ namespace MonoRaspberryPi
             this.myTimer = new System.Timers.Timer();
             this.myTimer.Enabled = true;
             this.myTimer.AutoReset = true;
-            this.myTimer.Interval = 200;
+            this.myTimer.Interval = 100;
             this.myTimer.Elapsed += new ElapsedEventHandler(OnTimerEvent);
         }
 
@@ -137,6 +138,16 @@ namespace MonoRaspberryPi
     /// </summary>
     class RaspberrPi
     {
+        private int[] gpio = new int[26];
+
+        public RaspberrPi()
+        {
+            for (int i = 0; i < this.gpio.Length; i++)
+            {
+                gpio[i] = 0;
+            }
+        }
+
         /// <summary>
         /// ピンモードの設定
         /// </summary>
@@ -154,7 +165,11 @@ namespace MonoRaspberryPi
         /// <param name="value">値</param>
         public void PinWrite(int no, int value)
         {
-            this.ProcessExec("-g write " + no + " " + value);
+            if(this.gpio[no-1] != value)
+            {
+                this.ProcessExec("-g write " + no + " " + value);
+                this.gpio[no-1] = value;
+            }
         }
 
         /// <summary>
