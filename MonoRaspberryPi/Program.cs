@@ -9,7 +9,7 @@ namespace MonoRaspberryPi
 {
     class Program
     {
-        static bool cardRead = true;
+        //static bool cardRead = true;
 
         static void Main(string[] args)
         {
@@ -33,23 +33,23 @@ namespace MonoRaspberryPi
 
             for (; ; )
             {
-                if (cardRead)
-                {
+                //if (cardRead)
+                //{
                     Console.WriteLine("card read start.");
                     FelicaReader reader = new FelicaReader();
 
                     reader.Readed += ReadedHandler;
                     reader.Read();
                     //cardRead = false;
-                }
-                System.Threading.Thread.Sleep(1000);
-                Console.WriteLine("loop end.");
+                //}
+                //System.Threading.Thread.Sleep(1000);
+                //Console.WriteLine("loop end.");
             }
         }
 
         static void ReadedHandler(object sender, CardReadedEventArgs e)
         {
-            Console.WriteLine("Read!!");
+            //Console.WriteLine("Read!!");
             Console.WriteLine("\"" + e.ID + "\"");
             //cardRead = true;
         }
