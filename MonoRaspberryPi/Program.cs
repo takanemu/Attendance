@@ -21,6 +21,7 @@ namespace MonoRaspberryPi
             {
                 if(cardRead)
                 {
+                    Console.WriteLine("card read start.");
                     FelicaReader reader = new FelicaReader();
 
                     reader.Readed += ReadedHandler;
@@ -204,6 +205,7 @@ namespace MonoRaspberryPi
 
         public void Read()
         {
+            Console.WriteLine("FelicaReader::Read()");
             //  プロセスオブジェクトを生成
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             //  実行ファイルを指定
@@ -230,6 +232,7 @@ namespace MonoRaspberryPi
 
         private void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
+            Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
             string str = e.Data;
 
             CardReadedEventArgs args = new CardReadedEventArgs();
