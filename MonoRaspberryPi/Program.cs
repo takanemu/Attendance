@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Timers;
+﻿// 勤怠カード管理システム
 
 namespace MonoRaspberryPi
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
+    using System.Timers;
+
+    /// <summary>
+    /// 勤怠カード管理システムクラス
+    /// </summary>
     class Program
     {
-        //static bool cardRead = true;
-
         static void Main(string[] args)
         {
             GpioManager nabager = new GpioManager();
@@ -19,42 +22,34 @@ namespace MonoRaspberryPi
 
             //while (Console.ReadKey().KeyChar != 'q')
             //{
-                //if(cardRead)
-                //{
-                //    Console.WriteLine("card read start.");
-                //    FelicaReader reader = new FelicaReader();
-
-                //    reader.Readed += ReadedHandler;
-                //    reader.Read();
-                //    cardRead = false;
-                //}
             //    continue;
             //}
 
             for (; ; )
             {
-                //if (cardRead)
-                //{
-                    Console.WriteLine("card read start.");
-                    FelicaReader reader = new FelicaReader();
+                FelicaReader reader = new FelicaReader();
 
-                    reader.Readed += ReadedHandler;
-                    reader.Read();
-                    //cardRead = false;
-                //}
-                //System.Threading.Thread.Sleep(1000);
-                //Console.WriteLine("loop end.");
+                reader.Readed += ReadedHandler;
+                reader.Read();
             }
         }
 
+        /// <summary>
+        /// カード情報取得ハンドラー
+        /// </summary>
+        /// <param name="sender">イベント元</param>
+        /// <param name="e">パラメーター</param>
         static void ReadedHandler(object sender, CardReadedEventArgs e)
         {
-            //Console.WriteLine("Read!!");
-            Console.WriteLine("\"" + e.ID + "\"");
-            //cardRead = true;
+            Console.WriteLine("ID = " + e.ID);
+            Console.WriteLine("PM = " + e.PM);
+            Console.WriteLine("SYS = " + e.SYS);
         }
     }
 
+    /// <summary>
+    /// GPIO管理クラス
+    /// </summary>
     class GpioManager
     {
         private RaspberrPi pi;
@@ -62,6 +57,9 @@ namespace MonoRaspberryPi
         private int button = 0;
         private int led = 0;
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public GpioManager()
         {
             this.myTimer = new System.Timers.Timer();
@@ -71,6 +69,9 @@ namespace MonoRaspberryPi
             this.myTimer.Elapsed += new ElapsedEventHandler(OnTimerEvent);
         }
 
+        /// <summary>
+        /// 処理開始
+        /// </summary>
         public void Start()
         {
             this.pi = new RaspberrPi();
@@ -149,8 +150,14 @@ namespace MonoRaspberryPi
     /// </summary>
     class RaspberrPi
     {
+        /// <summary>
+        /// GPIOフラグバッファ
+        /// </summary>
         private int[] gpio = new int[26];
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public RaspberrPi()
         {
             for (int i = 0; i < this.gpio.Length; i++)
@@ -229,15 +236,28 @@ namespace MonoRaspberryPi
         }
     }
 
+    /// <summary>
+    /// フェリカリーダークラス
+    /// </summary>
     public class FelicaReader
     {
+        /// <summary>
+        /// イベント
+        /// </summary>
+        /// <param name="sender">イベント元</param>
+        /// <param name="e">パラメーター</param>
         public delegate void CardReadedEventHandler(object sender, CardReadedEventArgs e);
 
+        /// <summary>
+        /// イベント
+        /// </summary>
         public event CardReadedEventHandler Readed;
 
+        /// <summary>
+        /// 読み取り開始
+        /// </summary>
         public void Read()
         {
-            Console.WriteLine("FelicaReader::Read()");
             //  プロセスオブジェクトを生成
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             //  実行ファイルを指定
@@ -262,22 +282,82 @@ namespace MonoRaspberryPi
             p.Close();
         }
 
+        /// <summary>
+        /// 読み取りイベントハンドラー
+        /// </summary>
+        /// <param name="sender">イベント元</param>
+        /// <param name="e">パラメーター</param>
         private void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
-            Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
-            string str = e.Data;
-
+            //Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
             CardReadedEventArgs args = new CardReadedEventArgs();
-            
-            args.ID = str;
+
+            args.ID = this.GetID(e.Data);
+            args.PM = this.GetPM(e.Data);
+            args.SYS = this.GetSYS(e.Data);
 
             this.Readed(this, args);
         }
+
+        /// <summary>
+        /// 文字列解析
+        /// </summary>
+        /// <param name="source">解析元文字</param>
+        /// <param name="regular">正規表現</param>
+        /// <param name="startIndex">抽出開始インデックス</param>
+        /// <param name="length">抽出文字長</param>
+        /// <returns>抽出文字</returns>
+        private string StringAnalyze(string source, string regular, int startIndex, int length)
+        {
+            System.Text.RegularExpressions.MatchCollection mc = System.Text.RegularExpressions.Regex.Matches(source, regular);
+
+            if (mc.Count > 0)
+            {
+                string one = mc[0].Value;
+                return one.Substring(startIndex, length);
+            }
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// ID抽出
+        /// </summary>
+        /// <param name="source">解析元文字</param>
+        /// <returns>抽出文字</returns>
+        private string GetID(string source)
+        {
+            return this.StringAnalyze(source, @"IDm=[0-9]*", 4, 16);
+        }
+
+        /// <summary>
+        /// PM抽出
+        /// </summary>
+        /// <param name="source">解析元文字</param>
+        /// <returns>抽出文字</returns>
+        private string GetPM(string source)
+        {
+            return this.StringAnalyze(source, @"PMm=[0-9a-f]*", 4, 16);
+        }
+
+        /// <summary>
+        /// SYS抽出
+        /// </summary>
+        /// <param name="source">解析元文字</param>
+        /// <returns>抽出文字</returns>
+        private string GetSYS(string source)
+        {
+            return this.StringAnalyze(source, @"SYS=[0-9]*", 4, 4);
+        }
     }
 
+    /// <summary>
+    /// カード情報イベント情報
+    /// </summary>
     public class CardReadedEventArgs : EventArgs
     {
         public string ID { get; set; }
+        public string PM { get; set; }
+        public string SYS { get; set; }
     }
 
 }
