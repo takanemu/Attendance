@@ -752,7 +752,7 @@ namespace MonoRaspberryPi
         {
             this.pi = new RaspberrPi();
 
-            this.pi.PinMode(22, PinMode.Out);
+            this.pi.PinMode(18, PinMode.Out);
             this.pi.PinMode(23, PinMode.Out);
             this.pi.PinMode(24, PinMode.In);
             this.pi.PinMode(25, PinMode.Out);
