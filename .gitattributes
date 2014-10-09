@@ -43,6 +43,9 @@
 #*.jpg   binary
 #*.png   binary
 #*.gif   binary
+*.dll    binary
+*.exe    binary
+Makefile binary
 
 ###############################################################################
 # diff behavior for common document formats
