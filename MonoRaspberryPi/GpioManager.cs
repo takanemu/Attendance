@@ -13,6 +13,11 @@ namespace MonoRaspberryPi
         private int button = 0;
         private int led = 0;
 
+        private readonly int LED1 = 18;
+        private readonly int LED2 = 23;
+        private readonly int LED3 = 25;
+        private readonly int BUTTON = 24;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -32,10 +37,10 @@ namespace MonoRaspberryPi
         {
             this.pi = new RaspberrPi();
 
-            this.pi.PinMode(18, PinMode.Out);
-            this.pi.PinMode(23, PinMode.Out);
-            this.pi.PinMode(24, PinMode.In);
-            this.pi.PinMode(25, PinMode.Out);
+            this.pi.PinMode(this.LED1, PinMode.Out);
+            this.pi.PinMode(this.LED2, PinMode.Out);
+            this.pi.PinMode(this.LED3, PinMode.Out);
+            this.pi.PinMode(this.BUTTON, PinMode.In);
 
             this.LedOn(this.led);
 
@@ -44,14 +49,14 @@ namespace MonoRaspberryPi
 
         private void OnTimerEvent(object source, ElapsedEventArgs e)
         {
-            int sw = this.pi.PinRead(24);
+            int sw = this.pi.PinRead(this.BUTTON);
 
             if (sw != this.button)
             {
                 if (sw == 1)
                 {
                     this.led++;
-                    this.led = this.led > 2 ? 0 : this.led;
+                    this.led = this.led > 3 ? 0 : this.led;
                     this.LedOn(this.led);
                 }
                 this.button = sw;
@@ -63,19 +68,24 @@ namespace MonoRaspberryPi
             switch (no)
             {
                 case 0:
-                    this.pi.PinWrite(22, 0);
-                    this.pi.PinWrite(23, 0);
-                    this.pi.PinWrite(25, 1);
+                    this.pi.PinWrite(this.LED1, 0);
+                    this.pi.PinWrite(this.LED2, 0);
+                    this.pi.PinWrite(this.LED3, 0);
                     break;
                 case 1:
-                    this.pi.PinWrite(22, 0);
-                    this.pi.PinWrite(23, 1);
-                    this.pi.PinWrite(25, 0);
+                    this.pi.PinWrite(this.LED1, 0);
+                    this.pi.PinWrite(this.LED2, 0);
+                    this.pi.PinWrite(this.LED3, 1);
                     break;
                 case 2:
-                    this.pi.PinWrite(22, 1);
-                    this.pi.PinWrite(23, 0);
-                    this.pi.PinWrite(25, 0);
+                    this.pi.PinWrite(this.LED1, 0);
+                    this.pi.PinWrite(this.LED2, 1);
+                    this.pi.PinWrite(this.LED3, 0);
+                    break;
+                case 3:
+                    this.pi.PinWrite(this.LED1, 1);
+                    this.pi.PinWrite(this.LED2, 0);
+                    this.pi.PinWrite(this.LED3, 0);
                     break;
             }
         }
