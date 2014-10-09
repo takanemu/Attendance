@@ -443,8 +443,6 @@ namespace MonoRaspberryPi
 
             UriBuilder ub = new UriBuilder("https", this.host, 443, @"k/v1/records.json", "?app=17&query=" + this.IDmUrlEncode(idm) + "and" + this.DateUrlEncode() + this.Fields1UrlEncode() + this.Fields2UrlEncode());
 
-            var request = HttpWebRequest.CreateHttp(ub.Uri);
-
             HttpClientHandler handler = new HttpClientHandler();
 
             HttpClient cl = new HttpClient(handler);
@@ -546,8 +544,6 @@ namespace MonoRaspberryPi
         {
             UriBuilder ub = new UriBuilder("https", this.host, 443, @"k/v1/record.json");
 
-            var request = HttpWebRequest.CreateHttp(ub.Uri);
-
             HttpClientHandler handler = new HttpClientHandler();
 
             HttpClient cl = new HttpClient(handler);
@@ -642,8 +638,6 @@ namespace MonoRaspberryPi
         protected async Task<KintaiResult> KintaiPutAsync(string json)
         {
             UriBuilder ub = new UriBuilder("https", this.host, 443, @"k/v1/record.json");
-
-            var request = HttpWebRequest.CreateHttp(ub.Uri);
 
             HttpClientHandler handler = new HttpClientHandler();
 
