@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities.cs" />
+    <Compile Include="FelicaReader.cs" />
+    <Compile Include="GpioManager.cs" />
+    <Compile Include="Kintone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
