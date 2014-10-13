@@ -30,15 +30,15 @@ namespace MonoRaspberryPi
             Console.WriteLine("ID = " + Program.config.id);
             Console.WriteLine("HOST = " + Program.config.host);
 
-            if(args.Length == 1 && args[0] == "-test")
+            // 接続クラス作成
+            kintone = new Kintone(Program.config.id, Program.config.password, Program.config.host);
+
+            if (args.Length == 1 && args[0] == "-test")
             {
                 KintaiSend("0123456789000000");
             }
             else
             {
-                // 接続クラス作成
-                kintone = new Kintone(Program.config.id, Program.config.password, Program.config.host);
-
                 // Raspberry pi GPIO制御クラス
                 GpioManager nabager = new GpioManager();
 
