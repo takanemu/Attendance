@@ -1,4 +1,16 @@
-Attendance
+#カード出退勤システムプログラム
 ==========
 
-Attendance Management System ,Raspberry pi, Felica Card Reader
+##はじめに
+このプログラムは、Raspberry Piとフェリカリーダーを使って、出退勤システムを構築するためのモックアップです。
+サーバーには、サイボウズKintoneを利用しています。
+プログラムのメイン言語は、C#(Xamarin mono)ですがフェリカリーダーやGPIOを制御している部分は、既存のライブラリを呼び出す実装になっています。
+会社の出入口に置いて、カードをタッチするだけで出勤・退勤を打刻できます。
+Raspberry Piとフェリカリーダーだけで構築できるので、安上がりに構築したい人向けのシステムとなるでしょう。
+
+##実行環境
+(1)Raspberry Pi
+(2)GPIO制御ライブラリ WiringPi
+(3)フェリカリーダー制御ライブラリ nfcpy
+(4)mono 3.2.8
+
