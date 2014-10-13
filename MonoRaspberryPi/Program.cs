@@ -2,6 +2,7 @@
 
 namespace MonoRaspberryPi
 {
+    using System;
     using System.IO;
     using System.Runtime.Serialization.Json;
     using System.Text;
@@ -26,26 +27,36 @@ namespace MonoRaspberryPi
             // 設定ファイル読み込み
             Program.ConfigRead();
 
-            // 接続クラス作成
-            kintone = new Kintone(Program.config.id, Program.config.password, Program.config.host);
+            Console.WriteLine("ID = " + Program.config.id);
+            Console.WriteLine("HOST = " + Program.config.host);
 
-            // Raspberry pi GPIO制御クラス
-            GpioManager nabager = new GpioManager();
-
-            nabager.Start();
-
-            //while (Console.ReadKey().KeyChar != 'q')
-            //{
-            //    continue;
-            //}
-
-            for (; ; )
+            if(args.Length == 1 && args[0] == "-test")
             {
-                // カードリーダー読み取りクラス作成
-                FelicaReader reader = new FelicaReader();
+                KintaiSend("0123456789000000");
+            }
+            else
+            {
+                // 接続クラス作成
+                kintone = new Kintone(Program.config.id, Program.config.password, Program.config.host);
 
-                reader.Readed += ReadedHandler;
-                reader.Read();
+                // Raspberry pi GPIO制御クラス
+                GpioManager nabager = new GpioManager();
+
+                nabager.Start();
+
+                //while (Console.ReadKey().KeyChar != 'q')
+                //{
+                //    continue;
+                //}
+
+                for (; ; )
+                {
+                    // カードリーダー読み取りクラス作成
+                    FelicaReader reader = new FelicaReader();
+
+                    reader.Readed += ReadedHandler;
+                    reader.Read();
+                }
             }
         }
 
@@ -56,13 +67,21 @@ namespace MonoRaspberryPi
         /// <param name="e">パラメーター</param>
         static void ReadedHandler(object sender, CardReadedEventArgs e)
         {
-            //Console.WriteLine("ID = " + e.ID);
-            //Console.WriteLine("PM = " + e.PM);
-            //Console.WriteLine("SYS = " + e.SYS);
-            string IDm = e.ID;
+            Console.WriteLine("ID = " + e.ID);
+            Console.WriteLine("PM = " + e.PM);
+            Console.WriteLine("SYS = " + e.SYS);
 
+            KintaiSend(e.ID);
+        }
+
+        /// <summary>
+        /// 勤怠サーバー処理
+        /// </summary>
+        /// <param name="idm">カードID</param>
+        static void KintaiSend(string idm)
+        {
             // 打刻情報取得
-            KintaiRecords result = kintone.ReadAttendanceRecord(IDm).Result;
+            KintaiRecords result = kintone.ReadAttendanceRecord(idm).Result;
 
             if (result.IsExist)
             {
@@ -87,7 +106,7 @@ namespace MonoRaspberryPi
             {
                 // レコードが存在しないので、新規登録
                 // 出勤打刻
-                KintaiResult createResult = kintone.CreateAttendanceRecord(IDm).Result;
+                KintaiResult createResult = kintone.CreateAttendanceRecord(idm).Result;
             }
         }
 
