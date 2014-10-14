@@ -7,56 +7,51 @@ namespace MonoRaspberryPi
     using System.Runtime.Serialization.Json;
     using System.Text;
 
-    /// <summary>
-    /// 勤怠カード管理システムクラス
-    /// </summary>
-    class Program
+    public class KintaiApplication
     {
         // 設定クラス
-        private static ApplicationConfig config;
+        private ApplicationConfig config;
 
         // Kintone接続クラス
-        private static Kintone kintone;
+        private Kintone kintone;
 
         /// <summary>
-        /// メイン関数
+        /// コンストラクタ
         /// </summary>
-        /// <param name="args"></param>
-        static void Main(string[] args)
+        public KintaiApplication()
         {
             // 設定ファイル読み込み
-            Program.ConfigRead();
+            this.ConfigRead();
 
-            Console.WriteLine("ID = " + Program.config.id);
-            Console.WriteLine("HOST = " + Program.config.host);
+            Console.WriteLine("ID = " + this.config.id);
+            Console.WriteLine("HOST = " + this.config.host);
 
             // 接続クラス作成
-            kintone = new Kintone(Program.config.id, Program.config.password, Program.config.host);
+            this.kintone = new Kintone(this.config.id, this.config.password, this.config.host);
+        }
 
-            if (args.Length == 1 && args[0] == "-test")
+        /// <summary>
+        /// 処理実行
+        /// </summary>
+        public void Run()
+        {
+            // Raspberry pi GPIO制御クラス
+            GpioManager nabager = new GpioManager();
+
+            nabager.Start();
+
+            //while (Console.ReadKey().KeyChar != 'q')
+            //{
+            //    continue;
+            //}
+
+            for (; ; )
             {
-                KintaiSend("0123456789000000");
-            }
-            else
-            {
-                // Raspberry pi GPIO制御クラス
-                GpioManager nabager = new GpioManager();
+                // カードリーダー読み取りクラス作成
+                FelicaReader reader = new FelicaReader();
 
-                nabager.Start();
-
-                //while (Console.ReadKey().KeyChar != 'q')
-                //{
-                //    continue;
-                //}
-
-                for (; ; )
-                {
-                    // カードリーダー読み取りクラス作成
-                    FelicaReader reader = new FelicaReader();
-
-                    reader.Readed += ReadedHandler;
-                    reader.Read();
-                }
+                reader.Readed += ReadedHandler;
+                reader.Read();
             }
         }
 
@@ -65,20 +60,20 @@ namespace MonoRaspberryPi
         /// </summary>
         /// <param name="sender">イベント元</param>
         /// <param name="e">パラメーター</param>
-        static void ReadedHandler(object sender, CardReadedEventArgs e)
+        private void ReadedHandler(object sender, CardReadedEventArgs e)
         {
             Console.WriteLine("ID = " + e.ID);
             Console.WriteLine("PM = " + e.PM);
             Console.WriteLine("SYS = " + e.SYS);
 
-            KintaiSend(e.ID);
+            this.KintaiSend(e.ID);
         }
 
         /// <summary>
         /// 勤怠サーバー処理
         /// </summary>
         /// <param name="idm">カードID</param>
-        static void KintaiSend(string idm)
+        public void KintaiSend(string idm)
         {
             // 打刻情報取得
             KintaiRecords result = kintone.ReadAttendanceRecord(idm).Result;
@@ -113,7 +108,7 @@ namespace MonoRaspberryPi
         /// <summary>
         /// 設定ファイル読み込み
         /// </summary>
-        static void ConfigRead()
+        public void ConfigRead()
         {
             using (StreamReader reader = new StreamReader("config.json", Encoding.UTF8))
             {
@@ -127,8 +122,44 @@ namespace MonoRaspberryPi
 
                     DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ApplicationConfig));
 
-                    Program.config = (ApplicationConfig)ser.ReadObject(stream);
+                    this.config = (ApplicationConfig)ser.ReadObject(stream);
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 勤怠カード管理システムクラス
+    /// </summary>
+    class Program
+    {
+        /// <summary>
+        /// メイン関数
+        /// </summary>
+        /// <param name="args"></param>
+        static void Main(string[] args)
+        {
+            if (!File.Exists("config.json"))
+            {
+                // 設定ファイルが無いので、空の定義ファイルを作成
+                Console.WriteLine("設定ファイルのテンプレートを作成しました。");
+                ConfigWrite();
+                return;
+            }
+
+            KintaiApplication app = new KintaiApplication();
+
+            if (args.Length == 1)
+            {
+                if (args[0] == "-test")
+                {
+                    Console.WriteLine("テスト送信");
+                    app.KintaiSend("0123456789000000");
+                }
+            }
+            else
+            {
+                app.Run();
             }
         }
 
