@@ -185,6 +185,11 @@ namespace MonoRaspberryPi
                     GpioManager nabager = new GpioManager();
 
                     nabager.Start();
+
+                    while (Console.ReadKey().KeyChar != 'q')
+                    {
+                        continue;
+                    }
                 }
             }
             else
