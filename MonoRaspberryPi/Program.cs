@@ -25,7 +25,13 @@ namespace MonoRaspberryPi
 
             Console.WriteLine("ID = " + this.config.id);
             Console.WriteLine("HOST = " + this.config.host);
+        }
 
+        /// <summary>
+        /// Kintone接続クラス生成
+        /// </summary>
+        public void Init()
+        {
             // 接続クラス作成
             this.kintone = new Kintone(this.config.id, this.config.password, this.config.host);
         }
@@ -75,8 +81,12 @@ namespace MonoRaspberryPi
         /// <param name="idm">カードID</param>
         public void KintaiSend(string idm)
         {
+            if(this.kintone == null)
+            {
+                return;
+            }
             // 打刻情報取得
-            KintaiRecords result = kintone.ReadAttendanceRecord(idm).Result;
+            KintaiRecords result = this.kintone.ReadAttendanceRecord(idm).Result;
 
             if (result.IsExist)
             {
@@ -84,24 +94,24 @@ namespace MonoRaspberryPi
                 if (string.IsNullOrEmpty(result.RestStartTime))
                 {
                     // 休憩開始打刻
-                    KintaiResult createResult = kintone.RestStart(result.RecordNo).Result;
+                    KintaiResult createResult = this.kintone.RestStart(result.RecordNo).Result;
                 }
                 else if (result.RestStartTime == result.RestEndTime)
                 {
                     // 休憩開始と休憩終了が同じなら休憩終了打刻
-                    KintaiResult createResult = kintone.RestEnd(result.RecordNo, result.RestStartTime).Result;
+                    KintaiResult createResult = this.kintone.RestEnd(result.RecordNo, result.RestStartTime).Result;
                 }
                 else
                 {
                     // 退勤打刻
-                    KintaiResult createResult = kintone.ClockingOut(result.RecordNo).Result;
+                    KintaiResult createResult = this.kintone.ClockingOut(result.RecordNo).Result;
                 }
             }
             else
             {
                 // レコードが存在しないので、新規登録
                 // 出勤打刻
-                KintaiResult createResult = kintone.CreateAttendanceRecord(idm).Result;
+                KintaiResult createResult = this.kintone.CreateAttendanceRecord(idm).Result;
             }
         }
 
@@ -153,12 +163,20 @@ namespace MonoRaspberryPi
             {
                 if (args[0] == "-test")
                 {
+                    // 通信テストモード
                     Console.WriteLine("テスト送信");
+                    app.Init();
                     app.KintaiSend("0123456789000000");
+                }
+                else if(args[0] == "-read")
+                {
+                    // カード読み取りモード
+                    app.Run();
                 }
             }
             else
             {
+                app.Init();
                 app.Run();
             }
         }
