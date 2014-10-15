@@ -170,8 +170,21 @@ namespace MonoRaspberryPi
                 }
                 else if(args[0] == "-read")
                 {
-                    // カード読み取りモード
-                    app.Run();
+                    // カード読み取りテストモード
+                    for (; ; )
+                    {
+                        // カードリーダー読み取りクラス作成
+                        FelicaReader reader = new FelicaReader();
+
+                        reader.Readed += ReadedHandler;
+                        reader.Read();
+                    }
+                }
+                else if(args[0] == "-gpio")
+                {
+                    GpioManager nabager = new GpioManager();
+
+                    nabager.Start();
                 }
             }
             else
@@ -199,6 +212,13 @@ namespace MonoRaspberryPi
             StreamWriter writer = new StreamWriter("config.json", false, Encoding.UTF8);
             writer.WriteLine(sr.ReadToEnd());
             writer.Close();
+        }
+    
+        static void ReadedHandler(object sender, CardReadedEventArgs e)
+        {
+            Console.WriteLine("ID = " + e.ID);
+            Console.WriteLine("PM = " + e.PM);
+            Console.WriteLine("SYS = " + e.SYS);
         }
     }
 }
