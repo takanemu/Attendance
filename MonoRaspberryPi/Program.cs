@@ -46,11 +46,6 @@ namespace MonoRaspberryPi
 
             nabager.Start();
 
-            //while (Console.ReadKey().KeyChar != 'q')
-            //{
-            //    continue;
-            //}
-
             for (; ; )
             {
                 // カードリーダー読み取りクラス作成
@@ -171,6 +166,7 @@ namespace MonoRaspberryPi
                 else if(args[0] == "-read")
                 {
                     // カード読み取りテストモード
+                    /*
                     for (; ; )
                     {
                         // カードリーダー読み取りクラス作成
@@ -179,6 +175,29 @@ namespace MonoRaspberryPi
                         reader.Readed += ReadedHandler;
                         reader.Read();
                     }
+                    */
+                    //  プロセスオブジェクトを生成
+                    System.Diagnostics.Process p = new System.Diagnostics.Process();
+                    //  実行ファイルを指定
+                    p.StartInfo.FileName = @"/home/pi/nfcpy-0.9.1/examples/tagtool.py";
+                    //  シェルコマンドを無効に
+                    p.StartInfo.UseShellExecute = false;
+                    //  入力をリダイレクト
+                    p.StartInfo.RedirectStandardInput = true;
+                    //  出力をリダイレクト
+                    p.StartInfo.RedirectStandardOutput = true;
+                    //  OutputDataReceivedイベントハンドラを追加
+                    p.OutputDataReceived += OutputDataReceivedHandler;
+                    //  プロセスを実行
+                    p.Start();
+                    //  非同期で出力の読み取りを開始
+                    p.BeginOutputReadLine();
+                    //  入力を行う為のストリームライターとプロセスの標準入力をリンク
+                    System.IO.StreamWriter myStreamWriter = p.StandardInput;
+
+                    myStreamWriter.Close();
+                    p.WaitForExit();
+                    p.Close();
                 }
                 else if(args[0] == "-gpio")
                 {
@@ -197,6 +216,12 @@ namespace MonoRaspberryPi
                 app.Init();
                 app.Run();
             }
+        }
+
+        private static void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        {
+            Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
+            Console.WriteLine("ID = " + e.Data);
         }
 
         /// <summary>
