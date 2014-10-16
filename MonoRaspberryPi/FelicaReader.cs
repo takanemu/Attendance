@@ -98,9 +98,10 @@ namespace MonoRaspberryPi
         private void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
             Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
+            Console.WriteLine("ID = " + e.Data);
             CardReadedEventArgs args = new CardReadedEventArgs();
 
-            //args.ID = this.GetID(e.Data);
+            args.ID = this.GetID(e.Data);
             //args.PM = this.GetPM(e.Data);
             //args.SYS = this.GetSYS(e.Data);
 
