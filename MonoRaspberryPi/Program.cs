@@ -177,12 +177,7 @@ namespace MonoRaspberryPi
                         reader.Read();
                     }
                     */
-                    FelicaReader.OutputDataReceived = (e) =>
-                    {
-                        Console.WriteLine("ID = " + e.ID);
-                        Console.WriteLine("PM = " + e.PM);
-                        Console.WriteLine("SYS = " + e.SYS);
-                    };
+                    FelicaReader.Readed += ReadedHandler;
 
                     for (;;)
                     {

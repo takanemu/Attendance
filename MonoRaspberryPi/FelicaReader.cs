@@ -10,14 +10,14 @@ namespace MonoRaspberryPi
         /// </summary>
         /// <param name="sender">イベント元</param>
         /// <param name="e">パラメーター</param>
-        //public delegate void CardReadedEventHandler(object sender, CardReadedEventArgs e);
+        public delegate void CardReadedEventHandler(object sender, CardReadedEventArgs e);
 
         /// <summary>
         /// イベント
         /// </summary>
-        //public event CardReadedEventHandler Readed;
+        public static event CardReadedEventHandler Readed;
 
-        public static Action<CardReadedEventArgs> OutputDataReceived;
+        //public static Action<CardReadedEventArgs> OutputDataReceived;
 
         public static void ReadStatic()
         {
@@ -47,7 +47,7 @@ namespace MonoRaspberryPi
 
         private static void OutputDataReceivedStaticHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
-            //Console.WriteLine("ID = " + e.Data);
+            Console.WriteLine("ID = " + e.Data);
 
             CardReadedEventArgs args = new CardReadedEventArgs();
 
@@ -55,7 +55,8 @@ namespace MonoRaspberryPi
             args.PM = GetPM(e.Data);
             args.SYS = GetSYS(e.Data);
 
-            OutputDataReceived(args);
+            Readed(sender, args);
+            //OutputDataReceived(args);
         }
         /*
         /// <summary>
