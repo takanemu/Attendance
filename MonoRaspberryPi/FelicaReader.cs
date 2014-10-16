@@ -10,12 +10,14 @@ namespace MonoRaspberryPi
         /// </summary>
         /// <param name="sender">イベント元</param>
         /// <param name="e">パラメーター</param>
-        public delegate void CardReadedEventHandler(object sender, CardReadedEventArgs e);
+        //public delegate void CardReadedEventHandler(object sender, CardReadedEventArgs e);
 
         /// <summary>
         /// イベント
         /// </summary>
-        public event CardReadedEventHandler Readed;
+        //public event CardReadedEventHandler Readed;
+
+        public static Action<CardReadedEventArgs> OutputDataReceived;
 
         public static void ReadStatic()
         {
@@ -45,9 +47,17 @@ namespace MonoRaspberryPi
 
         private static void OutputDataReceivedStaticHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
-            Console.WriteLine("ID = " + e.Data);
-        }
+            //Console.WriteLine("ID = " + e.Data);
 
+            CardReadedEventArgs args = new CardReadedEventArgs();
+
+            args.ID = GetID(e.Data);
+            args.PM = GetPM(e.Data);
+            args.SYS = GetSYS(e.Data);
+
+            OutputDataReceived(args);
+        }
+        /*
         /// <summary>
         /// 読み取り開始
         /// </summary>
@@ -93,7 +103,7 @@ namespace MonoRaspberryPi
 
             this.Readed(this, args);
         }
-
+        */
         /// <summary>
         /// 文字列解析
         /// </summary>
@@ -102,7 +112,7 @@ namespace MonoRaspberryPi
         /// <param name="startIndex">抽出開始インデックス</param>
         /// <param name="length">抽出文字長</param>
         /// <returns>抽出文字</returns>
-        private string StringAnalyze(string source, string regular, int startIndex, int length)
+        public static string StringAnalyze(string source, string regular, int startIndex, int length)
         {
             System.Text.RegularExpressions.MatchCollection mc = System.Text.RegularExpressions.Regex.Matches(source, regular);
 
@@ -119,9 +129,9 @@ namespace MonoRaspberryPi
         /// </summary>
         /// <param name="source">解析元文字</param>
         /// <returns>抽出文字</returns>
-        private string GetID(string source)
+        public static string GetID(string source)
         {
-            return this.StringAnalyze(source, @"IDm=[0-9]*", 4, 16);
+            return StringAnalyze(source, @"IDm=[0-9]*", 4, 16);
         }
 
         /// <summary>
@@ -129,9 +139,9 @@ namespace MonoRaspberryPi
         /// </summary>
         /// <param name="source">解析元文字</param>
         /// <returns>抽出文字</returns>
-        private string GetPM(string source)
+        public static string GetPM(string source)
         {
-            return this.StringAnalyze(source, @"PMm=[0-9a-f]*", 4, 16);
+            return StringAnalyze(source, @"PMm=[0-9a-f]*", 4, 16);
         }
 
         /// <summary>
@@ -139,9 +149,9 @@ namespace MonoRaspberryPi
         /// </summary>
         /// <param name="source">解析元文字</param>
         /// <returns>抽出文字</returns>
-        private string GetSYS(string source)
+        public static string GetSYS(string source)
         {
-            return this.StringAnalyze(source, @"SYS=[0-9]*", 4, 4);
+            return StringAnalyze(source, @"SYS=[0-9]*", 4, 4);
         }
     }
 

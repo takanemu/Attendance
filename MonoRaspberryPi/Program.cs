@@ -45,8 +45,8 @@ namespace MonoRaspberryPi
             GpioManager nabager = new GpioManager();
 
             nabager.Start();
-
-            for (; ; )
+            /*
+            for (;;)
             {
                 // カードリーダー読み取りクラス作成
                 FelicaReader reader = new FelicaReader();
@@ -54,6 +54,7 @@ namespace MonoRaspberryPi
                 reader.Readed += ReadedHandler;
                 reader.Read();
             }
+            */
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace MonoRaspberryPi
                 {
                     // カード読み取りテストモード
                     /*
-                    for (; ; )
+                    for (;;)
                     {
                         // カードリーダー読み取りクラス作成
                         FelicaReader reader = new FelicaReader();
@@ -176,6 +177,13 @@ namespace MonoRaspberryPi
                         reader.Read();
                     }
                     */
+                    FelicaReader.OutputDataReceived = (e) =>
+                    {
+                        Console.WriteLine("ID = " + e.ID);
+                        Console.WriteLine("PM = " + e.PM);
+                        Console.WriteLine("SYS = " + e.SYS);
+                    };
+
                     for (;;)
                     {
                         FelicaReader.ReadStatic();
@@ -198,12 +206,6 @@ namespace MonoRaspberryPi
                 app.Init();
                 app.Run();
             }
-        }
-
-        private static void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
-            Console.WriteLine("ID = " + e.Data);
         }
 
         /// <summary>
