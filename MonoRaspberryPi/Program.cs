@@ -167,22 +167,24 @@ namespace MonoRaspberryPi
                 else if(args[0] == "-read")
                 {
                     // カード読み取りテストモード
-                    /*
+                    
                     for (;;)
                     {
                         // カードリーダー読み取りクラス作成
                         FelicaReader reader = new FelicaReader();
 
-                        reader.Readed += ReadedHandler;
+                        //reader.Readed += ReadedHandler;
                         reader.Read();
                     }
-                    */
+                    
+                    /*
                     FelicaReader.Readed += ReadedHandler;
 
                     for (;;)
                     {
                         FelicaReader.ReadStatic();
                     }
+                    */
                 }
                 else if(args[0] == "-gpio")
                 {
