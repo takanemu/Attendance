@@ -176,7 +176,10 @@ namespace MonoRaspberryPi
                         reader.Read();
                     }
                     */
-                    FelicaReader.ReadStatic();
+                    for (;;)
+                    {
+                        FelicaReader.ReadStatic();
+                    }
                 }
                 else if(args[0] == "-gpio")
                 {
