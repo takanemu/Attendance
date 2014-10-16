@@ -176,28 +176,7 @@ namespace MonoRaspberryPi
                         reader.Read();
                     }
                     */
-                    //  プロセスオブジェクトを生成
-                    System.Diagnostics.Process p = new System.Diagnostics.Process();
-                    //  実行ファイルを指定
-                    p.StartInfo.FileName = @"/home/pi/nfcpy-0.9.1/examples/tagtool.py";
-                    //  シェルコマンドを無効に
-                    p.StartInfo.UseShellExecute = false;
-                    //  入力をリダイレクト
-                    p.StartInfo.RedirectStandardInput = true;
-                    //  出力をリダイレクト
-                    p.StartInfo.RedirectStandardOutput = true;
-                    //  OutputDataReceivedイベントハンドラを追加
-                    p.OutputDataReceived += OutputDataReceivedHandler;
-                    //  プロセスを実行
-                    p.Start();
-                    //  非同期で出力の読み取りを開始
-                    p.BeginOutputReadLine();
-                    //  入力を行う為のストリームライターとプロセスの標準入力をリンク
-                    System.IO.StreamWriter myStreamWriter = p.StandardInput;
-
-                    myStreamWriter.Close();
-                    p.WaitForExit();
-                    p.Close();
+                    FelicaReader.ReadStatic();
                 }
                 else if(args[0] == "-gpio")
                 {
