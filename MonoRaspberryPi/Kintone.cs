@@ -90,7 +90,7 @@ namespace MonoRaspberryPi
         /// <returns></returns>
         protected async Task<string> ExecuteRestGet(string idm)
         {
-            Console.WriteLine("REST(GET)の通信の実施");
+            //Console.WriteLine("REST(GET)の通信の実施");
             string resultString = "";
 
             UriBuilder ub = new UriBuilder("https", this.host, 443, @"k/v1/records.json", "?app=17&query=" + this.IDmUrlEncode(idm) + "and" + this.DateUrlEncode() + this.Fields1UrlEncode() + this.Fields2UrlEncode());
@@ -105,7 +105,7 @@ namespace MonoRaspberryPi
             HttpResponseMessage httpResponse = null;
             try
             {
-                Console.WriteLine("GetAsync(" + ub.Uri.AbsoluteUri + ")");
+                //Console.WriteLine("GetAsync(" + ub.Uri.AbsoluteUri + ")");
                 httpResponse = await cl.GetAsync(ub.Uri);
             }
             catch(Exception ex)
@@ -132,7 +132,7 @@ namespace MonoRaspberryPi
         /// <returns>レコード情報</returns>
         public async Task<KintaiRecords> ReadAttendanceRecord(string idm)
         {
-            Console.WriteLine("レコード情報の取得");
+            //Console.WriteLine("レコード情報の取得");
             string result = await this.ExecuteRestGet(idm);
 
             KintaiRecords entity = new KintaiRecords();

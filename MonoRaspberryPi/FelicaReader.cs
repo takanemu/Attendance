@@ -22,7 +22,7 @@ namespace MonoRaspberryPi
         /// </summary>
         public void Read()
         {
-            Console.WriteLine("FelicaReader::Read() - start");
+            //Console.WriteLine("FelicaReader::Read() - start");
             //  プロセスオブジェクトを生成
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             //  実行ファイルを指定
@@ -45,7 +45,7 @@ namespace MonoRaspberryPi
             myStreamWriter.Close();
             p.WaitForExit();
             p.Close();
-            Console.WriteLine("FelicaReader::Read() - end");
+            //Console.WriteLine("FelicaReader::Read() - end");
         }
 
         /// <summary>
@@ -55,16 +55,13 @@ namespace MonoRaspberryPi
         /// <param name="e">パラメーター</param>
         private void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
-            Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
-            Console.WriteLine(e.Data);
+            //Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
+            //Console.WriteLine(e.Data);
             CardReadedEventArgs args = new CardReadedEventArgs();
 
-            //args.ID = this.GetID(e.Data);
-            //args.PM = this.GetPM(e.Data);
-            //args.SYS = this.GetSYS(e.Data);
-            args.ID = "0123456789000000";
-            args.PM = "";
-            args.SYS = "";
+            args.ID = this.GetID(e.Data);
+            args.PM = this.GetPM(e.Data);
+            args.SYS = this.GetSYS(e.Data);
 
             this.Readed(this, args);
         }

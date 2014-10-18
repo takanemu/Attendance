@@ -63,9 +63,9 @@ namespace MonoRaspberryPi
         /// <param name="e">パラメーター</param>
         private void ReadedHandler(object sender, CardReadedEventArgs e)
         {
-            Console.WriteLine("ID = " + e.ID);
-            Console.WriteLine("PM = " + e.PM);
-            Console.WriteLine("SYS = " + e.SYS);
+            //Console.WriteLine("ID = " + e.ID);
+            //Console.WriteLine("PM = " + e.PM);
+            //Console.WriteLine("SYS = " + e.SYS);
 
             this.KintaiSend(e.ID);
         }
@@ -89,16 +89,19 @@ namespace MonoRaspberryPi
                 if (string.IsNullOrEmpty(result.RestStartTime))
                 {
                     // 休憩開始打刻
+                    Console.WriteLine("休憩開始打刻");
                     KintaiResult createResult = this.kintone.RestStart(result.RecordNo).Result;
                 }
                 else if (result.RestStartTime == result.RestEndTime)
                 {
                     // 休憩開始と休憩終了が同じなら休憩終了打刻
+                    Console.WriteLine("休憩終了打刻");
                     KintaiResult createResult = this.kintone.RestEnd(result.RecordNo, result.RestStartTime).Result;
                 }
                 else
                 {
                     // 退勤打刻
+                    Console.WriteLine("退勤打刻");
                     KintaiResult createResult = this.kintone.ClockingOut(result.RecordNo).Result;
                 }
             }
@@ -106,6 +109,7 @@ namespace MonoRaspberryPi
             {
                 // レコードが存在しないので、新規登録
                 // 出勤打刻
+                Console.WriteLine("出勤打刻");
                 KintaiResult createResult = this.kintone.CreateAttendanceRecord(idm).Result;
             }
         }
