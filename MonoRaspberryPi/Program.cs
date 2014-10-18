@@ -45,7 +45,7 @@ namespace MonoRaspberryPi
             GpioManager nabager = new GpioManager();
 
             nabager.Start();
-            /*
+            
             for (;;)
             {
                 // カードリーダー読み取りクラス作成
@@ -54,7 +54,6 @@ namespace MonoRaspberryPi
                 reader.Readed += ReadedHandler;
                 reader.Read();
             }
-            */
         }
 
         /// <summary>
@@ -173,18 +172,9 @@ namespace MonoRaspberryPi
                         // カードリーダー読み取りクラス作成
                         FelicaReader reader = new FelicaReader();
 
-                        //reader.Readed += ReadedHandler;
+                        reader.Readed += ReadedHandler;
                         reader.Read();
                     }
-                    
-                    /*
-                    FelicaReader.Readed += ReadedHandler;
-
-                    for (;;)
-                    {
-                        FelicaReader.ReadStatic();
-                    }
-                    */
                 }
                 else if(args[0] == "-gpio")
                 {

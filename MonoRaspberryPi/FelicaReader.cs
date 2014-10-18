@@ -17,48 +17,6 @@ namespace MonoRaspberryPi
         /// </summary>
         public event CardReadedEventHandler Readed;
 
-        //public static Action<CardReadedEventArgs> OutputDataReceived;
-        /*
-        public static void ReadStatic()
-        {
-            //  プロセスオブジェクトを生成
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
-            //  実行ファイルを指定
-            p.StartInfo.FileName = @"/home/pi/nfcpy-0.9.1/examples/tagtool.py";
-            //  シェルコマンドを無効に
-            p.StartInfo.UseShellExecute = false;
-            //  入力をリダイレクト
-            p.StartInfo.RedirectStandardInput = true;
-            //  出力をリダイレクト
-            p.StartInfo.RedirectStandardOutput = true;
-            //  OutputDataReceivedイベントハンドラを追加
-            p.OutputDataReceived += OutputDataReceivedStaticHandler;
-            //  プロセスを実行
-            p.Start();
-            //  非同期で出力の読み取りを開始
-            p.BeginOutputReadLine();
-            //  入力を行う為のストリームライターとプロセスの標準入力をリンク
-            System.IO.StreamWriter myStreamWriter = p.StandardInput;
-
-            myStreamWriter.Close();
-            p.WaitForExit();
-            p.Close();
-        }
-
-        private static void OutputDataReceivedStaticHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            Console.WriteLine("ID = " + e.Data);
-
-            CardReadedEventArgs args = new CardReadedEventArgs();
-
-            args.ID = GetID(e.Data);
-            args.PM = GetPM(e.Data);
-            args.SYS = GetSYS(e.Data);
-
-            Readed(sender, args);
-            //OutputDataReceived(args);
-        }
-        */
         /// <summary>
         /// 読み取り開始
         /// </summary>
@@ -101,11 +59,14 @@ namespace MonoRaspberryPi
             Console.WriteLine("ID = " + e.Data);
             CardReadedEventArgs args = new CardReadedEventArgs();
 
-            args.ID = this.GetID(e.Data);
+            //args.ID = this.GetID(e.Data);
             //args.PM = this.GetPM(e.Data);
             //args.SYS = this.GetSYS(e.Data);
+            args.ID = "0123456789000000";
+            args.PM = "";
+            args.SYS = "";
 
-            //this.Readed(this, args);
+            this.Readed(this, args);
         }
         
         /// <summary>
