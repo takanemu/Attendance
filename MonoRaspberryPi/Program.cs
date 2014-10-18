@@ -166,7 +166,6 @@ namespace MonoRaspberryPi
                 else if(args[0] == "-read")
                 {
                     // カード読み取りテストモード
-                    
                     for (;;)
                     {
                         // カードリーダー読み取りクラス作成
@@ -215,6 +214,11 @@ namespace MonoRaspberryPi
             writer.Close();
         }
     
+        /// <summary>
+        /// 読み取りテスト
+        /// </summary>
+        /// <param name="sender">イベント元</param>
+        /// <param name="e">パラメーター</param>
         static void ReadedHandler(object sender, CardReadedEventArgs e)
         {
             Console.WriteLine("ID = " + e.ID);

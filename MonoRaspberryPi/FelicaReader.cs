@@ -56,7 +56,7 @@ namespace MonoRaspberryPi
         private void OutputDataReceivedHandler(object sender, System.Diagnostics.DataReceivedEventArgs e)
         {
             Console.WriteLine("FelicaReader::OutputDataReceivedHandler()");
-            Console.WriteLine("ID = " + e.Data);
+            Console.WriteLine(e.Data);
             CardReadedEventArgs args = new CardReadedEventArgs();
 
             //args.ID = this.GetID(e.Data);
@@ -96,7 +96,7 @@ namespace MonoRaspberryPi
         /// <returns>抽出文字</returns>
         public string GetID(string source)
         {
-            return StringAnalyze(source, @"IDm=[0-9]*", 4, 16);
+            return StringAnalyze(source, @"IDm=[0-9a-f]*", 4, 16);
         }
 
         /// <summary>
