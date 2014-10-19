@@ -18,8 +18,6 @@ namespace MonoRaspberryPi
         /// </summary>
         private int mode = 0;
 
-        private int backup;
-
         private readonly int LED1 = 18;
         private readonly int LED2 = 23;
         private readonly int LED3 = 25;
@@ -57,15 +55,9 @@ namespace MonoRaspberryPi
 
             set
             {
-                if (this.mode == 0 && value == 1)
+                if (this.mode != value)
                 {
-                    this.backup = this.led;
                     this.led = 0;
-                    this.LedOn(this.led);
-                }
-                else if(this.mode == 1 && value == 0)
-                {
-                    this.led = this.backup;
                     this.LedOn(this.led);
                 }
                 this.mode = value;
