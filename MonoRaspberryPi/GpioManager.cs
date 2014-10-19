@@ -13,6 +13,13 @@ namespace MonoRaspberryPi
         private int button = 0;
         private int led = 0;
 
+        /// <summary>
+        /// 0...マニュアルモード / 1...プログレスモード
+        /// </summary>
+        private int mode = 0;
+
+        private int backup;
+
         private readonly int LED1 = 18;
         private readonly int LED2 = 23;
         private readonly int LED3 = 25;
@@ -28,6 +35,41 @@ namespace MonoRaspberryPi
             this.myTimer.AutoReset = true;
             this.myTimer.Interval = 100;
             this.myTimer.Elapsed += new ElapsedEventHandler(OnTimerEvent);
+        }
+
+        /// <summary>
+        /// LED No
+        /// </summary>
+        public int LEDNo
+        {
+            get { return this.led; }
+        }
+
+        /// <summary>
+        /// Mode
+        /// </summary>
+        public int Mode
+        {
+            get
+            {
+                return this.mode;
+            }
+
+            set
+            {
+                if (this.mode == 0 && value == 1)
+                {
+                    this.backup = this.led;
+                    this.led = 0;
+                    this.LedOn(this.led);
+                }
+                else if(this.mode == 1 && value == 0)
+                {
+                    this.led = this.backup;
+                    this.LedOn(this.led);
+                }
+                this.mode = value;
+            }
         }
 
         /// <summary>
@@ -49,17 +91,28 @@ namespace MonoRaspberryPi
 
         private void OnTimerEvent(object source, ElapsedEventArgs e)
         {
-            int sw = this.pi.PinRead(this.BUTTON);
-
-            if (sw != this.button)
+            if(this.mode == 0)
             {
-                if (sw == 1)
+                // マニュアルモード
+                int sw = this.pi.PinRead(this.BUTTON);
+
+                if (sw != this.button)
                 {
-                    this.led++;
-                    this.led = this.led > 3 ? 0 : this.led;
-                    this.LedOn(this.led);
+                    if (sw == 1)
+                    {
+                        this.led++;
+                        this.led = this.led > 3 ? 0 : this.led;
+                        this.LedOn(this.led);
+                    }
+                    this.button = sw;
                 }
-                this.button = sw;
+            }
+            else
+            {
+                // プログレスモード
+                this.led++;
+                this.led = this.led > 3 ? 0 : this.led;
+                this.LedOn(this.led);
             }
         }
 

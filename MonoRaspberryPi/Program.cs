@@ -71,7 +71,9 @@ namespace MonoRaspberryPi
             //Console.WriteLine("PM = " + e.PM);
             //Console.WriteLine("SYS = " + e.SYS);
 
+            this.gpio.Mode = 1;
             this.KintaiSend(e.ID);
+            this.gpio.Mode = 0;
         }
 
         /// <summary>
