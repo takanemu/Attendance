@@ -15,6 +15,9 @@ namespace MonoRaspberryPi
         // Kintone接続クラス
         private Kintone kintone;
 
+        // GPIO制御クラス
+        private GpioManager gpio;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -25,6 +28,7 @@ namespace MonoRaspberryPi
 
             Console.WriteLine("ID = " + this.config.id);
             Console.WriteLine("HOST = " + this.config.host);
+            Console.WriteLine("TAGTOOL = " + this.config.tagtool);
         }
 
         /// <summary>
@@ -42,14 +46,14 @@ namespace MonoRaspberryPi
         public void Run()
         {
             // Raspberry pi GPIO制御クラス
-            GpioManager nabager = new GpioManager();
+            this.gpio = new GpioManager();
 
-            nabager.Start();
+            this.gpio.Start();
             
             for (;;)
             {
                 // カードリーダー読み取りクラス作成
-                FelicaReader reader = new FelicaReader();
+                FelicaReader reader = new FelicaReader(this.config.tagtool);
 
                 reader.Readed += ReadedHandler;
                 reader.Read();
@@ -63,7 +67,7 @@ namespace MonoRaspberryPi
         /// <param name="e">パラメーター</param>
         private void ReadedHandler(object sender, CardReadedEventArgs e)
         {
-            //Console.WriteLine("ID = " + e.ID);
+            Console.WriteLine("ID = " + e.ID);
             //Console.WriteLine("PM = " + e.PM);
             //Console.WriteLine("SYS = " + e.SYS);
 
@@ -173,7 +177,7 @@ namespace MonoRaspberryPi
                     for (;;)
                     {
                         // カードリーダー読み取りクラス作成
-                        FelicaReader reader = new FelicaReader();
+                        FelicaReader reader = new FelicaReader("/home/pi/nfcpy-0.9.1/examples/tagtool.py");
 
                         reader.Readed += ReadedHandler;
                         reader.Read();

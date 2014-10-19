@@ -10,6 +10,17 @@ namespace MonoRaspberryPi
     public class ApplicationConfig
     {
         /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public ApplicationConfig()
+        {
+            this.id = string.Empty;
+            this.password = string.Empty;
+            this.host = string.Empty;
+            this.tagtool = "/home/pi/nfcpy-0.9.1/examples/tagtool.py";
+        }
+
+        /// <summary>
         /// ID
         /// </summary>
         [DataMember]
@@ -26,6 +37,12 @@ namespace MonoRaspberryPi
         /// </summary>
         [DataMember]
         public string host;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember]
+        public string tagtool;
     }
 
     /// <summary>

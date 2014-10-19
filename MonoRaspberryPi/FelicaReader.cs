@@ -18,6 +18,20 @@ namespace MonoRaspberryPi
         public event CardReadedEventHandler Readed;
 
         /// <summary>
+        /// tagtool path
+        /// </summary>
+        private string tagtool;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="path">ツールパス</param>
+        public FelicaReader(string path)
+        {
+            this.tagtool = path;
+        }
+
+        /// <summary>
         /// 読み取り開始
         /// </summary>
         public void Read()
@@ -26,7 +40,7 @@ namespace MonoRaspberryPi
             //  プロセスオブジェクトを生成
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             //  実行ファイルを指定
-            p.StartInfo.FileName = @"/home/pi/nfcpy-0.9.1/examples/tagtool.py";
+            p.StartInfo.FileName = this.tagtool;
             //  シェルコマンドを無効に
             p.StartInfo.UseShellExecute = false;
             //  入力をリダイレクト
