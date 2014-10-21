@@ -90,7 +90,7 @@ namespace MonoRaspberryPi
         /// <returns></returns>
         protected async Task<string> ExecuteRestGet(string idm)
         {
-            //Console.WriteLine("REST(GET)の通信の実施");
+            Console.WriteLine("REST(GET)の通信の実施 - start : " + DateTime.Now.ToString("G.fff"));
             string resultString = "";
 
             UriBuilder ub = new UriBuilder("https", this.host, 443, @"k/v1/records.json", "?app=17&query=" + this.IDmUrlEncode(idm) + "and" + this.DateUrlEncode() + this.Fields1UrlEncode() + this.Fields2UrlEncode());
@@ -122,6 +122,7 @@ namespace MonoRaspberryPi
             }
             resultString = await httpResponse.Content.ReadAsStringAsync();
 
+            Console.WriteLine("REST(GET)の通信の実施 - end : " + DateTime.Now.ToString("G.fff"));
             return resultString;
         }
 
@@ -132,7 +133,7 @@ namespace MonoRaspberryPi
         /// <returns>レコード情報</returns>
         public async Task<KintaiRecords> ReadAttendanceRecord(string idm)
         {
-            //Console.WriteLine("レコード情報の取得");
+            Console.WriteLine("レコード情報の取得 - start : " + DateTime.Now.ToString("G.fff"));
             string result = await this.ExecuteRestGet(idm);
 
             KintaiRecords entity = new KintaiRecords();
@@ -168,6 +169,7 @@ namespace MonoRaspberryPi
                 Exception exception = new Exception(ex.Message);
                 throw exception;
             }
+            Console.WriteLine("レコード情報の取得 - end : " + DateTime.Now.ToString("G.fff"));
             return entity;
         }
 
@@ -197,6 +199,7 @@ namespace MonoRaspberryPi
         /// <returns>結果</returns>
         public async Task<KintaiResult> CreateAttendanceRecord(string idm)
         {
+            Console.WriteLine("出勤打刻 - start : " + DateTime.Now.ToString("G.fff"));
             UriBuilder ub = new UriBuilder("https", this.host, 443, @"k/v1/record.json");
 
             HttpClientHandler handler = new HttpClientHandler();
@@ -231,6 +234,7 @@ namespace MonoRaspberryPi
 
             KintaiResult resultJson = JValue.Parse(resultString).ToObject<KintaiResult>();
 
+            Console.WriteLine("出勤打刻 - end : " + DateTime.Now.ToString("G.fff"));
             return resultJson;
         }
 
