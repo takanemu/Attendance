@@ -16,7 +16,7 @@ namespace MonoRaspberryPi
         private Kintone kintone;
 
         // GPIO制御クラス
-        //private GpioManager gpio;
+        private GpioManager gpio;
 
         /// <summary>
         /// コンストラクタ
@@ -46,9 +46,9 @@ namespace MonoRaspberryPi
         public void Run()
         {
             // Raspberry pi GPIO制御クラス
-            //this.gpio = new GpioManager();
+            this.gpio = new GpioManager();
 
-            //this.gpio.Start();
+            this.gpio.Start();
             
             for (;;)
             {
@@ -71,9 +71,9 @@ namespace MonoRaspberryPi
             //Console.WriteLine("PM = " + e.PM);
             //Console.WriteLine("SYS = " + e.SYS);
 
-            //this.gpio.Mode = 1;
+            this.gpio.Mode = 1;
             this.KintaiSend(e.ID);
-            //this.gpio.Mode = 0;
+            this.gpio.Mode = 0;
         }
 
         /// <summary>
