@@ -127,7 +127,7 @@ namespace MonoRaspberryPi
         /// <returns>抽出文字</returns>
         public string GetSYS(string source)
         {
-            return StringAnalyze(source, @"SYS=[0-9]*", 4, 4);
+            return StringAnalyze(source, @"SYS=[0-9a-f]*", 4, 4);
         }
     }
 
